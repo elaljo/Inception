@@ -1,8 +1,10 @@
 FROM    debian:bookworm
 
-RUN     apt-get update && apt-get install -y mariadb-server
+RUN     apt-get update && apt-get install -y mariadb-server 
 
-RUN     mkdir -p /var/run/mysqldir && chmod 777 /var/run/mysqldir
+RUN     mkdir -p /var/run/mysqld
+
+RUN     chmod 777 /var/run/mysqld
 
 ARG     DB_NAME=${DB_NAME}
 ARG     DB_USER=${DB_USER}
@@ -14,10 +16,9 @@ ENV     DB_PASS=${DB_PASS}
 
 EXPOSE  3306
 
-COPY    /conf/database.sql /database.sql
+COPY    tools/database.sh /
 
-COPY    /tools/database.sh  /
-
+COPY    conf/database.sql /database.sql
 RUN     chmod +x /database.sh
 RUN     bash /database.sh
 
